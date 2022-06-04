@@ -1,0 +1,117 @@
+{% extends 'website/layout_base/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<div class="container">
+    {% include "website/usuario/menu-top.html" %}
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content pr-10" >
+                <form id="user_video_insere" method="POST" >
+                <div class="modal-header">
+                    <h5 class="modal-title pink" id="staticBackdropLabel">Inserir:</h5>
+                    <a type="button" class="f" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times"
+                            aria-hidden="true"></i></a>
+                </div>
+                <div class="modal-body">
+               
+                    <h5 class="color-rose">Inserir Videos. Limite de 3</h5>
+                                        <h5 class="color-rose">use Youtube</h5>
+
+                  
+                        {% csrf_token %}
+                        {% for field in inserevideosform %}
+                        <div class="col-12">
+                            <label class="col-12 lb">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                        {% endfor %}
+                    
+                  
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary text"data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-outline form-control bt_salvar mt-10">Salvar</button>
+                  </div>
+                </form>
+            </div><!--  end content -->
+        </div>
+    </div><!--  end modal -->
+    <div id="alerta"></div>
+
+
+    <div class="row">
+        <div class="col-12 col-md-12">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">
+
+                        {% if usuario %}
+                        {% for user in usuario %}
+                        {{user.usuario}}
+                        {% endfor %}
+                        {% endif %}
+                    </h3>
+                    <label class="form-check-label lf" style="float: right;" for="flexSwitchCheckDefault">Inserir <a
+                            class="lk" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                            href="#">Videos</a>:</label>
+
+                </div>
+                <div class="row lc">
+                    <div class="col-12" style="color: #e000bf;">
+                        <h5>{% if msg %} {{ msg }} {% endif %}</h5>
+                    </div>
+                    {% for video in videos %}
+                    <div class=" col-12 col-md-4 pl-0 pr-0 campo video" id="video{{video.id}}">
+                        	<style>iframe{width: 100% !important; height: 360px !important;}</style>
+                       {{video.link|safe}}
+                      <!--   <iframe src="{{video.link}}"  class="video_user" frameborder=0 scrolling=no allowfullscreen=allowfullscreen></iframe> -->
+                        <div class="buttom">
+                            <button type="button" onclick='Del_Video("{{video.id }}")' ;
+                            class="btn btn-outline form-control delete">Excluir</button>
+                        </div>
+                    
+                    </div>
+                  {% endfor %}
+                </div>
+            </div><!--  end card -->
+        </div>
+
+    </div> <!-- end row -->
+
+</div><!--  end container -->
+
+<script>
+
+    function Del_Video(video_id) {
+        var resultado = confirm("Deseja mesmo excluir o Video ?");
+        if (resultado == true) {
+            $.ajax({
+                type: 'GET',
+                url: "",
+                data: { "video_id": video_id },
+                success: function (response) {
+
+                    if (response["deletado"]) {
+                        $("#video" + video_id).fadeOut(4000);
+                    }
+                    else {
+                        erro = `<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                           <strong>Erro...</strong> 
+                                           <button type="button" class="btn-close" data-bs-dismiss="alert"aria-label="Close"></button></div>`
+                        $(".alerta").append(erro);
+                    }
+                },
+                error: function (response) {
+                    console.log(response)
+                }
+            }) // end ajax
+        }
+    };
+
+</script>
+{% endblock %}

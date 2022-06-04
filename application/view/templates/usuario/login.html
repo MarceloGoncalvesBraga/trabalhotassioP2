@@ -1,0 +1,86 @@
+{% extends "website/layout_base/base.html" %}
+{% load static %}
+{% block  styles %} 
+<link rel="stylesheet" type="text/css" href="{% static 'css/stylo.css'  %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/responsive.css'  %}">
+{% endblock %}
+{% block content %}
+
+<main>
+    <div class="row logar" >
+
+        <div class="col-md-4">
+         
+        </div>
+        <div class="col-md-4 lg ">
+        <div id="alerta"></div>
+            <h3 class="my">Login</h3>
+            <form id="user-form" method="POST" action="">
+               
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="col-12">
+                    <label class="col-12 lb">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+                <input type="submit" class="bt_enviar" value="Entrar" id="enviar" />
+
+            </form>
+            <a class="lk" href="{% url 'website:cadastro' %}">CADASTRO</a>
+            <label id="alerte" class="col-12"></label>
+        </div>
+        <div class="col-md-4">
+        </div>
+
+
+    </div>
+</main>
+{% endblock %}
+{% block javascript %}
+<script>
+   
+    $(document).ready(function () {
+        
+     const alertBox = document.getElementById('alerta')
+     const alerte = document.getElementById('alerte')
+     $("#user-form").submit(function (e) {
+             e.preventDefault();
+             var serializedData = $(this).serialize();
+             $.ajax({
+                 type: 'POST',
+                 url: "{% url 'website:login' %}",
+                 data: serializedData,
+                 success: function (response) {
+                    $("#user-form").trigger('reset');
+                    if(response["error"]){
+                        alerte.innerHTML = `<div id="error" class="alert alert-dismissible fade show" role="alert">
+                                                E-mail ou Senha invalidos...!
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"aria-label="Close"></button></div>`
+                    }  
+                    if(response["valid"]){
+                        $("#error").text('');
+                        var Name = $("#id_email");
+                         Name.val()
+                         Name.focus()
+                         alertBox.innerHTML = `<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                <strong>Sucesso!</strong> Voce sera redirecionado !.
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"aria-label="Close"></button></div>`
+                                                setTimeout(function() { window.location.href = "user/"+response["valid"];}, 2000);
+                                                
+                    }
+                 },
+                 error: function (response) {
+                     alertBox.innerHTML = `<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                           <strong>Erro...</strong> Login erro..!.
+                                           <button type="button" class="btn-close" data-bs-dismiss="alert"aria-label="Close"></button></div>`
+                                          setTimeout(function(){window.location.reload(true);},3000);
+                                        }
+             })
+         })
+ 
+     })
+    
+</script>
+ {% endblock javascript %}

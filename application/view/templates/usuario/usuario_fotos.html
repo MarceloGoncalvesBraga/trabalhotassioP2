@@ -1,0 +1,108 @@
+{% extends 'website/layout_base/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    {% include "website/usuario/menu-top.html" %}
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content pr-10" >
+                <form id="user_foto_insere" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title pink" id="staticBackdropLabel">Inserir:</h5>
+                    <a type="button" class="f" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times"
+                            aria-hidden="true"></i></a>
+                </div>
+                <div class="modal-body">
+                    <div class="col-12">
+                        {% if msg %} {{ msg }} {% endif %}
+                    </div>
+                    <h5>Inserir Fotos. Limite de 20</h5>
+                        {% for field in inserefotosform %}
+                        <div class="col-12">
+                            <label class="col-12 lb">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
+                        {% endfor %}
+                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary text"data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-outline form-control bt_salvar mt-10">Salvar</button>
+                  </div>
+                </form>
+            </div> <!-- end 10 -->
+        </div>
+    </div><!--  end modal -->
+    <div id="alerta"></div>
+
+
+    <div class="row">
+        <div class="col-12 col-md-12">
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">
+
+                        {% if usuario %}
+                        {% for user in usuario %}
+                        {{user.usuario}}
+                        {% endfor %}
+                        {% endif %}
+                    </h3>
+                    <label class="form-check-label lf" style="float: right;" for="flexSwitchCheckDefault">Inserir <a
+                            class="lk" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                            href="#">Fotos</a>:</label>
+
+                </div>
+                <div class="row lc">
+                    {% for foto in fotos %}
+                    <div class=" col-6 col-md-3 pl-0 pr-0 campo" id="foto{{foto.id}}">
+
+                        <img class="img-lista-fotos image" src="{{foto.image.url}}" alt="{{foto.title}}">
+                        <div  class="buttom" style="text-align: center;">
+                            <button type="button" onclick='Del_Foto("{{foto.id }}")' ;
+                            class="btn btn-outline form-control delete">Excluir</button>
+                        </div>
+                    
+                    </div>
+                  {% endfor %}
+                </div>
+            </div><!--  end card -->
+        </div>
+
+    </div> <!-- end row -->
+
+</div><!--  end container -->
+
+<script>
+
+    function Del_Foto(foto_id) {
+        var resultado = confirm("Deseja mesmo excluir a imagen ?");
+        if (resultado == true) {
+            $.ajax({
+                type: 'GET',
+                url: "",
+                data: { "foto_id": foto_id },
+                success: function (response) {
+
+                    if (response["deletado"]) {
+                        $("#foto" + foto_id).fadeOut(4000);
+                    }
+                    else {
+                        erro = `<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                           <strong>Erro...</strong> Login erro..!.
+                                           <button type="button" class="btn-close" data-bs-dismiss="alert"aria-label="Close"></button></div>`
+                        $(".alerta").append(erro);
+                    }
+                },
+                error: function (response) {
+                    console.log(response)
+                }
+            }) // end ajax
+        }
+    };
+
+</script>
+{% endblock %}

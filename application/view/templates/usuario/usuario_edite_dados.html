@@ -1,0 +1,58 @@
+{% extends 'website/layout_base/base.html' %}
+{% load static %}
+{% block content %}
+<!-- <script src="./node_modules/ckeditor4/ckeditor.js"></script>
+<script><script>editor.resize( '100%', '320', true );</script>
+    CKEDITOR.replace( 'editor1' );
+</script> -->
+
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+
+<div class="container">
+    <div id="alerta"></div>
+
+      
+    <div class="row">
+        <div class="col-12 col-md-3">
+            {% include "website/usuario/menu-lateral.html" %}
+
+        </div>
+        <div class="col-12 col-md-8">
+
+            <div class="card card-primary card-outline">
+                <div class="card-header">
+                    <h3 class="card-title">
+
+                        {% if usuario %}
+                        {% for user in usuario %}
+                        {{user.usuario}}
+                        {% endfor %}
+                        {% endif %}
+                    </h3>
+                </div>
+                <form id="user_edit_filtros" method="POST"
+                    enctype="multipart/form-data">
+                    {% for field in userform %}
+                    {% csrf_token %}
+                 
+                    <div class="col-12">
+                        <label class="col-12 label-form">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-outline form-control bt_salvar">Salvar</button>
+
+                </form>
+
+            </div>
+        </div>
+        <div class="col-12 col-md-1">
+
+        </div>
+    </div> <!-- end row -->
+
+
+</div>
+
+{% endblock %}

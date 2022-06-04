@@ -1,0 +1,47 @@
+{% extends 'website/layout_base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="container">
+        
+        <div id="alerta"></div>
+                   
+
+                        <div class="row">
+                            <div class="col-12 col-md-3">
+                                {%  include "website/usuario/menu-lateral.html" %}
+                            </div><!--  end-3 -->
+                            <div class="col-12 col-md-9">
+                                <div class="card card-primary card-outline" >
+                                    {% if comentarios %}
+                                    {% for comentario in comentarios %}
+                                        <div class=" col-12 col-sm-12 border-bottom" style="margin-top: 10px;">
+                                          <div class="card w" style="background: transparent;">
+                                            <div class="card-body">
+                                              <p class="data" style="float: right;margin-bottom: -15px;">{{comentario.created}}</p> 
+                                              <h5 class="card-title ">{{comentario.nome|truncatewords:2}}</h5>
+                                              <p class="card-text text-t">{{comentario.msg}}</p>
+                                              <p class="right" style="float: right;margin-top: -35px;">{{comentario.status}}</p> 
+            
+                                            </div>
+                                          </div>
+                                      </div><!--  end card -->
+                                      {% endfor %}
+                                      {% endif %}
+                                     
+                            </div>
+                           </div>
+
+
+                        </div> <!-- end row -->
+                       
+                      
+                     
+     
+    </div>
+ 
+{% endblock %}
+{% block javascript %}
+
+{% endblock javascript %}

@@ -1,0 +1,55 @@
+
+
+<style>
+.menu-top ul {
+  position: relative;
+  list-style-type: none;
+  margin: auto;
+  padding: 0;
+  width: 100%;
+  padding: 7px 5px;
+  flex-direction: row-reverse;
+  display: inline-block;
+}
+
+.menu-top li {
+  float: right;
+}
+
+.menu-top li a {
+  display: block;
+  color: #000 !important;
+  text-align: center;
+  border: 1px solid #000;
+  padding: 9px 16px;
+  border-radius: 5px;
+  margin: 0 3px;
+  text-decoration: none;
+}
+
+.menu-top li a:hover {
+  color: #000 !important;
+  border: 1px solid #fff;
+}
+@media (max-width: 768px) {
+  .menu-top li {
+  float: none;
+  margin: 10px 0;
+  }     
+  .menu-topli a {margin: 10px 0; }
+}
+</style>
+<div class="menu-top">
+<ul>
+  {% if usuario %}
+  {% for user in usuario %} 
+
+  <li><a href="{{ user.get_user_fotos }}">Fotos <span aria-hidden="true">»</span></a>
+  <li><a href="{{ user.get_user_videos }}">Videos <span aria-hidden="true">»</span></a></li>
+  <li><a href="{{ user.get_user_edit_dados }}">Filtros de Busca e info Sobre: <span aria-hidden="true">»</span></a></li> 
+  <li><a href="{{ user.get_user }}">Home <span aria-hidden="true">»</span></a></li>
+
+  {% endfor %}
+  {% endif %}	
+  </ul>
+  </div>

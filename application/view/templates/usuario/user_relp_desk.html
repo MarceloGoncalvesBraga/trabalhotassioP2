@@ -1,0 +1,89 @@
+{% extends 'website/layout_base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog text-black">
+      <div class="modal-content pr-10">
+        <form id="relp_desk" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title pink" id="staticBackdropLabel">Relp Desk:</h5>
+          <a type="button" class=""data-bs-dismiss="modal" aria-label="Close"><i
+              class="fa fa-times" aria-hidden="true"></i></a>
+        </div>
+        <div class="modal-body">
+            {% for field in form %}
+            <div class="col-12">
+              <label class="col-12 label-form">{{ field.label }}</label>
+              {{ field }}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary text"data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-outline form-control bt_salvar mt-10">Salvar</button>
+        </div>
+      </form>
+      </div> <!-- end 10 -->
+  
+    </div>
+  </div><!--  end modal -->
+  <div id="alerta"></div>
+
+
+  <div class="row">
+    <div class="col-12 col-md-3">
+      {% include "website/usuario/menu-lateral.html" %}
+
+    </div><!--  end-3 -->
+    <div class="col-12 col-md-9">
+      <div class="card card-primary card-outline">
+        <div class="card-header">
+          <h3 class="card-title">
+
+            {% if usuario %}
+            {% for user in usuario %}
+            {{user.usuario}}
+            {% endfor %}
+            {% endif %}
+
+
+          </h3>
+          <label class="form-check-label open-help"
+            for="flexSwitchCheckDefault">
+            Abrir <a class="lk" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop" href="#">
+              Pedir Ajuda</a>:</label>
+        </div> <!-- end card-header -->
+        {% if relps %}
+        {% for relp in relps %}
+        <div class="col-12 col-sm-12 border-bottom" style="margin-top: 10px;">
+          <div class="card w" style="background: transparent;">
+            <div class="card-body">
+              <p class="right" style="float: right;margin-bottom: -15px;">{{relp.created}}</p>
+              <h5 class="card-title">{{relp.assunto}}</h5>
+             
+              <p class="card-text text-t">{{relp.msg}}</p>
+               {% if relp.resposta %}
+              <p class="card-text text-t">{{relp.resposta}}</p>
+               {% endif %}
+              <p class="right" style="float: right;margin-top: -35px;">{{relp.status}}</p>
+            </div>
+          </div>
+        </div><!--  end card -->
+        {% endfor %}
+        {% endif %}
+
+      </div>
+    </div> <!-- end col-md-6 -->
+  </div> <!-- end row -->
+
+</div>
+
+{% endblock %}

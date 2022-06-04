@@ -1,0 +1,75 @@
+{% extends 'website/layout_base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content pr-10">
+        <div class="modal-header">
+           <h5 class="modal-title pink" id="staticBackdropLabel">Alterar:</h5>
+           <a type="button" class=" " data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></a>
+        </div>
+        <div class="modal-body">
+            <form id="user_alterar" method="POST"  enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in userform %}
+                <div class="col-12">
+                  <label class="col-12 label-form">{{ field.label }}</label>
+                  {{ field }}
+                </div>
+              {% endfor %}     
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary text"data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-outline form-control bt_salvar mt-10">Salvar</button>
+          </div>
+       </form>
+      </div>
+    </div>
+     </div><!--  end modal -->
+        <div id="alerta"></div>
+                        <div class="row">
+                            <div class="col-12 col-md-3">
+                                {%  include "website/usuario/menu-lateral.html" %}
+                            </div><!--  end-3 -->
+                            <div class="col-12 col-md-9">
+                                <div class="col-12">{% if msg %} {{ msg }} {% endif %}</div>
+                                <div class="card card-primary card-outline">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+
+                                            {% if usuario %}
+                                            {% for user in usuario %}
+                                            {{user.usuario}}
+                                            {% endfor %}
+                                            {% endif %}
+
+                                        </h3>
+                                        <label class="form-check-label open-help lf" for="flexSwitchCheckDefault">
+                                            Alterar<a class="lk"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"  href="#">
+                                                Fotos</a>:</label>
+                                    </div>
+                                   
+                                    <div class="row" >
+                                      {% for usu in usuario %}
+                                      
+                                      <div class="col-12 col-md-12 " >
+                                        <label>Foto Principal</label>
+                                        <img class="img-usuario" src="{{usu.foto.url}}" alt="{{usu.nome}}">
+                                      </div>
+                                   
+                                      {% endfor %}
+                                   
+                                  </div>
+                                </div>
+                            </div><!-- end md--6 -->
+                        </div> <!-- end row -->
+    </div>
+ 
+{% endblock %}
+

@@ -1,0 +1,147 @@
+{% extends "website/layout_base/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+
+.modal-body {
+  color: #e000bf;
+}
+
+</style>
+<div class="container cadastro t-white" >
+  <div class="row">
+  <div class="col-md-4">
+
+  </div>
+  <div class="col-md-4">
+    <div class="" role="alert" id="alerta"></div>
+    <div class="col-12" style="text-align: center;"><i class="bi bi-envelope env"></i></div>
+    <form id="userform" method="POST" action="{% url 'website:cadastro' %} " enctype="multipart/form-data">
+      <div class="row">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group col-12 cd">
+          <label class="label-form">{{ field.label }}</label>
+          {{ field }}
+        </div>
+        {% endfor %}
+        <div class="col aceite">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="concorda" value="1">
+            <label class="form-check-label lf" for="flexSwitchCheckDefault">Nescessario aceitar os <a class="lk"  data-bs-toggle="modal" data-bs-target="#termosgeral"  href="#">Termos</a>:</label>
+            <p id="text" style="display:none">Checkbox is CHECKED!</p>
+          </div>
+          {% if msg %}
+          <label class="label-cad">{{ msg }}</label>
+          {% endif %}
+          <input type="submit" class="btn bt_enviar" value="Enviar" id="enviar" />
+        </div>
+      </div>
+      <form>
+     <!-- Modal -->
+   <!-- Modal -->
+   <div class="modal fade" id="termosgeral" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+   aria-labelledby="termosgeralLabel" aria-hidden="true">
+   <div class="modal-dialog">
+   <div class="modal-content">
+     <div class="modal-header">
+     <h5 class="modal-title m" id="termosgeralLabel">Termos:</h5>
+     <a type="button" class="f" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></a>
+     </div>
+     <div class="modal-body">
+       {% if termos %}
+      {% for termo in termos %}
+        <p class="titulo">{{termo.title|truncatewords:3}}</p>
+        <p class="titulo">{{termo.termos|safe}}</p>
+      {% endfor%}
+      {% endif %}
+     </div>
+     <div class="modal-footer">
+     <button type="button" class="btn btn-secondary r" data-bs-dismiss="modal">Close</button>
+    
+     </div>
+   </div>
+   </div>
+  </div><!--  end modal -->
+    </div> <!-- end col -->
+  <div class="col-md-4"></div>
+  </div> <!-- end row -->
+</div> <!-- end container -->
+
+{% endblock content %}
+{% block javascript %}
+<script>
+   
+    $("#userform").submit(function() {
+       var checkBox = document.getElementById("concorda");
+    
+      if (checkBox.checked !== true){
+       $("#alerta").text('Aceite os termos.');
+       return false;
+      }
+ 
+      });
+    $(document).ready(function () {
+ 
+     $("#id_email").focusout(function (e) {
+            e.preventDefault();
+            // get the nickname
+            var email = $(this).val();
+            // GET AJAX request
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'website:validate_email' %}",
+                data: {"email": email},
+                success: function (response) {
+                    // if not valid user, alert the user
+                    if(!response["unico"]){
+                        //alert("E-mail Ja Cadastrado").Builder(this, R.style.DialogStyle);;
+                        var idEmail = $("#id_email");
+                        //$("#alerta").text('E-mail já cadastrado..');
+                        $("#alerta").text('E-mail ja escolhido');
+                        idEmail.val("")
+                        idEmail.focus()
+                    }
+                    else{
+                      $("#alerta").text('');
+                    }
+                },
+                error: function (response) {
+                    console.log(response)
+                }
+            })
+        })
+   
+    $("#id_usuario").focusout(function (e) {
+            e.preventDefault();
+            // get the nickname
+            var usuario = $(this).val();
+            // GET AJAX request
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'website:validate_usuario' %}",
+                data: {"usuario": usuario},
+                success: function (response) {
+                    // if not valid user, alert the user
+                    if(!response["unico"]){
+                      //$("#alerta").text("website_Usuario ja escolhido");
+                        //alert("website_Usuario ja escolhido");
+                        $("#alerta").text('Usuario ja escolhido');
+                        var nickslug = $("#id_usuario");
+                        nickslug.val("")
+                        nickslug.focus()
+                    }
+                    else{
+                      $("#alerta").text('');
+                    }
+                },
+                error: function (response) {
+                    console.log(response)
+                }
+            })
+        })
+      })
+    
+ </script>
+ {% endblock javascript %}

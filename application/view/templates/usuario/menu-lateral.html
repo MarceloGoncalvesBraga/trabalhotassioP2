@@ -1,0 +1,26 @@
+
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fa fa-pencil" aria-hidden="true"></i>Paginas</h3>
+    </div>
+    <div class="card-body">
+     
+        <div class="card-body">
+            <div class="form-group">
+                
+                {% if usuario %}
+                {% for user in usuario %}
+                <a href="{{ user.get_user }}"class="btn btn-outline-info form-control guia">Home <span aria-hidden="true">»</span></a>
+                <a href="{{ user.get_user_edit_dados }}"class="btn btn-outline-info form-control guia">Filtros de Busca e info Sobre: <span aria-hidden="true">»</span></a>
+                <a href="{{ user.get_user_fotos }}"class="btn btn-outline-info form-control guia">Fotos <span aria-hidden="true">»</span></a>
+                <a href="{{ user.get_user_videos }}"class="btn btn-outline-info form-control guia">Videos <span aria-hidden="true">»</span></a>
+
+                {% endfor %}
+                {% endif %}	
+            </div>
+            
+          
+        </div>
+    </div>
+</div>
